@@ -1,0 +1,1 @@
+get server json data with js fetch api.
