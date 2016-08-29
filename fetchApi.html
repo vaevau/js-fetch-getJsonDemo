@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>js fetch api</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+
+body,ul,li,a{margin: 0;padding: 0;}
+li{list-style: none;}
+a{text-decoration: none;}
+#div1{line-height: 60px;position: absolute;top:100px;left: 200px;right:0;margin:auto;width: 600px;}
+#title {margin: 20px auto;width: 400px;}
+li{float: left;}
+a{margin-left: 20px;}
+a:hover{text-decoration: underline;}
+</style>
+<script type="text/javascript">
+
+window.onload = function(){
+	fetchs('https://ruby-china.org/api/v3/topics')
+}
+
+
+	function fetchs(url){
+		var oDiv1 = document.getElementById('div1');
+		fetch(url).then(function(response){
+		     return response.json().then(function(json){
+				var titleArr = [];
+			for(var i=0; i<json.topics.length; i++){
+				var titles = json.topics[i].title;
+				titleArr.push(titles);
+				
+			}
+			 for(var k in titleArr){
+			
+				oDiv1.innerHTML =  (titleArr+"</br>");
+				
+			}
+
+
+		})
+	})
+		fetchs(); 
+
+
+}
+
+
+
+
+
+
+
+</script>
+</head>
+
+<body>
+<div id="title">
+	<ul>
+		<li><a href="#" onclick="fetchs('https://ruby-china.org/api/v3/topics');" >默认</a></li>
+		<li><a href="#" onclick="fetchs('https://ruby-china.org/api/v3/topics?type=no_reply');">无人问津</a></li>
+		<li><a href="#" onclick="fetchs('https://ruby-china.org/api/v3/topics?type=popular');">优质帖子</a></li>
+		<li><a href="#" onclick="fetchs('https://ruby-china.org/api/v3/topics?type=recent');">最新创建</a></li>
+	</ul>
+</div>
+
+<div  id="div1"></div>
+
+ </body>
+</html>
