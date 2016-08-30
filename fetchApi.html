@@ -1,53 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>js fetch api</title>
+	<title>js fetch data form ruby-china</title>
 	<meta charset="utf-8">
-	<style type="text/css">
+<style type="text/css">
 
 body,ul,li,a{margin: 0;padding: 0;}
-li{list-style: none;}
-a{text-decoration: none;}
-#div1{line-height: 60px;position: absolute;top:100px;left: 200px;right:0;margin:auto;width: 600px;}
-#title {margin: 20px auto;width: 400px;}
-li{float: left;}
-a{margin-left: 20px;}
+li{list-style: none;float: left;}
+a{text-decoration: none;
+margin-left: 20px;font-family: Helvetica, Arial,"PingFang SC","Hiragino Sans GB","Source Han Sans CN",Roboto,"Heiti SC","Microsoft Yahei",sans-serif;}
 a:hover{text-decoration: underline;}
+body{background:#ccc;}
+#title {position: absolute;left: 54%;right: 0;width: 24%;margin: auto;top: 60px;}
+#title a{color: #000;font-size: 14px;}
+.popular {color: red !important;}
+#div1{line-height: 60px;position: absolute;top:100px;left: 80px;right:0;margin:auto;width: 900px;background: #fff;border-radius: 4px;
+padding-bottom: 30px;}
+
+.avatar{width:60px;height: 60px;border-radius: 50%;position: absolute;margin-top: -46px;margin-left: 30px;}
+.avatar .avatar_pic{width: 100%;height: 100%;border-radius: 50%;}
+
+.info{font-size: 12px;position: absolute;margin-top: -30px;margin-left: 100px;}
+.info a{margin-left: 1px;}
+.info a:hover{text-decoration: none;}
+.info a, .info a:after{color: #ABA8A6;}
+.info a:after{cursor: text; margin-left: 6px;}
+.node:after{ content: "•"; }
+.p-user-name:after{content: "• 最后由 ";}
+.r-user-name:after{content: " 回复";}
+
+
+.a{color: #000;font-size: 14px;display: block;margin-top: 30px;margin-left: 100px;}
+
 </style>
+
 <script type="text/javascript">
 
 window.onload = function(){
-	fetchs('https://ruby-china.org/api/v3/topics')
+	fetchDataFromRubyChina(dataUrl);
 }
 
+	  var dataUrl = "https://ruby-china.org/api/v3/topics?";
+	  function fetchDataFromRubyChina(url){
 
-	function fetchs(url){
-		var oDiv1 = document.getElementById('div1');
-		fetch(url).then(function(response){
-		     return response.json().then(function(json){
-				var titleArr = [];
+		  var oDiv1= document.getElementById('div1');
+
+                            fetch(url).then(function(response){
+		  response.json().then(function(json){
+
 			for(var i=0; i<json.topics.length; i++){
-				var titles = json.topics[i].title;
-				titleArr.push(titles);
+			       var titles = json.topics[i].title,
+				 postsId = json.topics[i].id,
+				 avatarUrl = json.topics[i].user.avatar_url,
+				 nodeId   = json.topics[i].node_id,
+				 nodeName   = json.topics[i].node_name,
+				 userName = json.topics[i].user.login,
+				 replyUserName = json.topics[i].last_reply_user_login;
 				
-			}
-			 for(var k in titleArr){
-			
-				oDiv1.innerHTML =  (titleArr+"</br>");
-				
+				//title_link
+				var aA = document.createElement("a")
+				aA.className = "a";
+				oDiv1.appendChild(aA);			
+				aA.innerHTML = titles+"</br>";
+				aA.href="https://ruby-china.org/topics/"+postsId;
+
+				//user_avaatar
+				var aAvatar = document.createElement('div');
+				var aImg = document.createElement('img');
+				aAvatar.className = "avatar";
+				aImg.className = "avatar_pic";
+				oDiv1.appendChild(aAvatar);
+				aAvatar.appendChild(aImg);
+				aImg.src = avatarUrl;
+
+				//bottom_info
+			       var aInfo = document.createElement('div'),
+				 aNode = document.createElement('a'),
+				 aPostsUserName = document.createElement('a'),
+				 aReplyUserName = document.createElement('a');
+				aPostsUserName.className = 'p-user-name';
+				aReplyUserName.className = 'r-user-name';
+				aInfo.className = "info";
+				aNode.className = "node";				
+				oDiv1.appendChild(aInfo);
+				aInfo.appendChild(aNode);
+				aInfo.appendChild(aPostsUserName);
+				aInfo.appendChild(aReplyUserName);
+
+				aNode.innerHTML = nodeName ;
+				aNode.href = "https://ruby-china.org/topics/node"+nodeId;
+				aPostsUserName.innerHTML = userName;
+				aPostsUserName.href = "https://ruby-china.org/"+userName;
+				aReplyUserName.innerHTML = replyUserName;
+				aReplyUserName.href = "https://ruby-china.org/"+ replyUserName;
+
+
 			}
 
 
 		})
 	})
-		fetchs(); 
-
+	
 
 }
-
-
-
-
 
 
 
@@ -56,15 +111,15 @@ window.onload = function(){
 
 <body>
 <div id="title">
-	<ul>
-		<li><a href="#" onclick="fetchs('https://ruby-china.org/api/v3/topics');" >默认</a></li>
-		<li><a href="#" onclick="fetchs('https://ruby-china.org/api/v3/topics?type=no_reply');">无人问津</a></li>
-		<li><a href="#" onclick="fetchs('https://ruby-china.org/api/v3/topics?type=popular');">优质帖子</a></li>
-		<li><a href="#" onclick="fetchs('https://ruby-china.org/api/v3/topics?type=recent');">最新创建</a></li>
-	</ul>
+         <ul>
+	<li><a href="#default" onclick="fetchDataFromRubyChina(dataUrl);" >默认</a></li>
+	<li><a href="#no_reply" onclick="fetchDataFromRubyChina(dataUrl+'type=no_reply');">无人问津</a></li>
+	<li><a href="#popular" class="popular" onclick="fetchDataFromRubyChina(dataUrl+'type=popular');">优质帖子</a></li>
+	<li><a href="#recent" onclick="fetchDataFromRubyChina(dataUrl+'type=recent');">最新创建</a></li>
+     </ul>
 </div>
 
-<div  id="div1"></div>
-
+<div id="div1"></div>
+	
  </body>
 </html>
